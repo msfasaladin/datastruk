@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime as datetime
 
 
 st.title('Data Struk Crisbar')
@@ -15,5 +16,6 @@ if Pemesanan == 'Take Away' :
 Pembayaran = st.selectbox('Metode Pembayaran', ['Tunai', 'Cashless'])
 if Pembayaran == 'Cashless' :
     st.selectbox('Jenis Pembayaran Cashless', ['Debit', 'Ovo', 'Dana', 'Gopay', 'Shopeepay'])
-st.date_input('Tanggal Pembuatan Struk')
-st.time_input('Waktu Pembuatan Struk')
+st.date_input('Tanggal Pembuatan Struk', value= "today")
+st.time_input('Waktu Pembuatan Struk', value= datetime)
+print(datetime.date)
