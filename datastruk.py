@@ -1,11 +1,13 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, time
 
 
 date = datetime.now()
 date_slice = date.date()
-time = date.strftime("%H-%M-%S")
-time_fix = datetime.strptime(time, "%H-%M-%S")
+Hour = (int(date.strftime("%H"))+7)%24
+Minutes = int(date.strftime("%M"))
+Seconds = int(date.strftime("%S"))
+time_fix = time(Hour,Minutes, Seconds)
 
 
 st.title('Data Struk Crisbar')
