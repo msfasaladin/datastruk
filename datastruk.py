@@ -29,7 +29,7 @@ with st.form("first_form2"):
             jenis_kelamin = st.selectbox('Jenis Kelamin Pelanggan', ['Laki-Laki', 'Perempuan'])
       else:
             jenis_on_demand = st.selectbox('Jenis On Demand Services', ['Go Food', 'Grab Food', 'Shopee Food'])
-      pembayaran = st.selectbox('Metode Pembayaran', ['Tunai', 'QRIS', 'Ovo', 'Dana', 'Gopay', 'ShopeePay'])
+      pembayaran = st.selectbox('Metode Pembayaran', ['Tunai', 'QRIS', 'OVO', 'Dana', 'Gopay', 'ShopeePay'])
       total_biaya = st.number_input('Total Biaya Pesanan(Rupiah)', min_value=0, max_value=100000000, value=0)
       tanggal_struk = st.date_input('Tanggal Pembuatan Struk', value= date_slice)
       waktu_struk = st.time_input('Waktu Pembuatan Struk', value= time_fix)
@@ -37,10 +37,10 @@ with st.form("first_form2"):
 
 if submit :
     if metode == 'Datang Langsung' :
-        sql = "INSERT INTO datastruk_crisbar (metode_pemesanan, jenis_kelamin, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO datastruk (metode_pemesanan, jenis_kelamin, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (metode, jenis_kelamin, pembayaran, total_biaya, tanggal_struk, waktu_struk)
     elif metode == 'On Demand Services' :
-        sql = "INSERT INTO datastruk_crisbar (metode_pemesanan, on_demand, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO datastruk (metode_pemesanan, on_demand, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (metode, jenis_on_demand, pembayaran, total_biaya, tanggal_struk, waktu_struk)
     cursor.execute(sql, val)
     conn.commit()
