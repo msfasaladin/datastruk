@@ -3,11 +3,11 @@ from datetime import datetime, time
 import mysql.connector
 
 conn = mysql.connector.connect(
-    host="localhost",
-    port = 3306,
-    user="root",
-    password="kjkszpj",
-    database="data_struk_crisbar"
+    host= st.secrets.connections.mysql.host,
+    port = st.secrets.connections.mysql.port,
+    user= st.secrets.connections.mysql.username,
+    password= st.secrets.connections.mysql.password,
+    database= st.secrets.connections.mysql.database
 )
 
 cursor = conn.cursor()
