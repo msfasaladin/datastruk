@@ -1,22 +1,35 @@
 import streamlit as st
 from datetime import datetime, time
-import mysql.connector
+from sqlalchemy import create_engine, Column, Integer, String, Date, Time
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-conn = mysql.connector.connect(
-    host= st.secrets.connections.mysql.host,
-    port = st.secrets.connections.mysql.port,
-    user= st.secrets.connections.mysql.username,
-    password= st.secrets.connections.mysql.password,
-    database= st.secrets.connections.mysql.database
-)
 
-cursor = conn.cursor()
+engine = create_engine("mysql+mysqldb://"+st.secrets.connections.mysql.username+":"+st.secrets.connections.mysql.password+"@localhost/"+st.secrets.connections.mysql.database)
 
-date = datetime.now()
-date_slice = date.date()
-hour = (int(date.strftime("%H"))+7)%24
-minutes = int(date.strftime("%M"))
-seconds = int(date.strftime("%S"))
+Base = declarative_base()
+
+class Data(Base):
+    __tablename__ = 'datastruk'
+
+    id = Column(Integer, primary_key=True, autoincrement='auto')
+    metode_pemesanan = Column(String(45))
+    jenis_kelamin = Column(String(45))
+    on_demand = Column(String(45))
+    metode_pembayaran = Column(String(45))
+    biaya_pemesanan = Column(Integer)
+    tanggal_pemesanan = Column(Date)
+    waktu_pemesanan = Column(Time)
+
+# Buat session untuk interaksi dengan database
+Session = sessionmaker(bind=engine)
+session = Session()
+
+tanggal = datetime.now()
+date_slice = tanggal.date()
+hour = (int(tanggal.strftime("%H"))+7)%24
+minutes = int(tanggal.strftime("%M"))
+seconds = int(tanggal.strftime("%S"))
 time_fix = time(hour,minutes, seconds)
 
 
@@ -26,7 +39,7 @@ with st.form("first_form2"):
       metode = st.selectbox('Metode Pemesanan', ['Datang Langsung', 'On Demand Services'])
       change = st.form_submit_button("Change")
       if metode == 'Datang Langsung':
-            jenis_kelamin = st.selectbox('Jenis Kelamin Pelanggan', ['Laki-Laki', 'Perempuan'])
+            jenis_kelamin_box = st.selectbox('Jenis Kelamin Pelanggan', ['Laki-Laki', 'Perempuan'])
       else:
             jenis_on_demand = st.selectbox('Jenis On Demand Services', ['Go Food', 'Grab Food', 'Shopee Food'])
       pembayaran = st.selectbox('Metode Pembayaran', ['Tunai', 'QRIS', 'OVO', 'Dana', 'Gopay', 'ShopeePay'])
@@ -37,12 +50,10 @@ with st.form("first_form2"):
 
 if submit :
     if metode == 'Datang Langsung' :
-        sql = "INSERT INTO datastruk (metode_pemesanan, jenis_kelamin, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
-        val = (metode, jenis_kelamin, pembayaran, total_biaya, tanggal_struk, waktu_struk)
+         new_data = Data(metode_pemesanan = metode, jenis_kelamin = jenis_kelamin_box, metode_pembayaran = pembayaran, biaya_pemesanan = total_biaya, tanggal_pemesanan = tanggal_struk, waktu_pemesanan = waktu_struk)
     elif metode == 'On Demand Services' :
-        sql = "INSERT INTO datastruk (metode_pemesanan, on_demand, metode_pembayaran, biaya_pemesanan, tanggal_pemesanan, waktu_pemesanan) VALUES (%s, %s, %s, %s, %s, %s)"
-        val = (metode, jenis_on_demand, pembayaran, total_biaya, tanggal_struk, waktu_struk)
-    cursor.execute(sql, val)
-    conn.commit()
+                  new_data = Data(metode_pemesanan = metode, on_demand = jenis_on_demand, metode_pembayaran = pembayaran, biaya_pemesanan = total_biaya, tanggal_pemesanan = tanggal_struk, waktu_pemesanan = waktu_struk)
+    session.add(new_data)
+    session.commit()
     st.success("Data berhasil disimpan!")
-conn.close()
+session.close()
