@@ -33,8 +33,7 @@ session = Session()
 
 tanggal = datetime.now()
 date_slice = tanggal.date()
-# hour = (int(tanggal.strftime("%H"))+7)%24
-hour = int(tanggal.strftime("%H"))
+hour = (int(tanggal.strftime("%H"))+7)%24
 minutes = int(tanggal.strftime("%M"))
 seconds = int(tanggal.strftime("%S"))
 time_fix = time(hour,minutes, seconds)
