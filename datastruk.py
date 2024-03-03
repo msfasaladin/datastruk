@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime, time
+import mysql.connector
 from sqlalchemy import create_engine, Column, Integer, String, Date, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -11,7 +12,7 @@ password= st.secrets.connections.mysql.password
 database= st.secrets.connections.mysql.database
 
 
-engine = create_engine(f"mysql+mysqldb://{user}:{password}@{host}:{port}/{database}", pool_pre_ping=True)
+engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}", pool_pre_ping=True)
 
 Base = declarative_base()
 
