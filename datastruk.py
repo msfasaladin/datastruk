@@ -5,17 +5,20 @@ from sqlalchemy import create_engine, Column, Integer, String, Date, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# mendefinisikan host port, user, password, dan database yang digunakan
 host= st.secrets.connections.mysql.host
 port = str(st.secrets.connections.mysql.port)
 user= st.secrets.connections.mysql.username
 password= st.secrets.connections.mysql.password
 database= st.secrets.connections.mysql.database
 
-
+# membuat engine untuk koneksi dengan database MySQL
 engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}", pool_pre_ping=True)
 
+# membuat base sebagai tools untuk mendeklarasikan tabel
 Base = declarative_base()
 
+# mendefinisikan model untuk tabel
 class Data(Base):
     __tablename__ = 'datastruk'
 
@@ -28,10 +31,11 @@ class Data(Base):
     tanggal_pemesanan = Column(Date)
     waktu_pemesanan = Column(Time)
 
-# Buat session untuk interaksi dengan database
+# membuat session untuk interaksi dengan database
 Session = sessionmaker(bind=engine)
 session = Session()
 
+# mendefinisikan tanggal dan waktu real time sebagai input di form tanggal dan waktu streamlit
 tanggal = datetime.now()
 date_slice = tanggal.date()
 hour = (int(tanggal.strftime("%H"))+7)%24
@@ -40,6 +44,7 @@ seconds = int(tanggal.strftime("%S"))
 time_fix = time(hour,minutes, seconds)
 
 
+# mendesain form input pada streamlit
 st.title('Data Struk Crisbar')
 
 with st.form("first_form2"):
